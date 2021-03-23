@@ -5,14 +5,17 @@ library(ggplot2)
 library(shinycssloaders)
 
 
-options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
+options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=1)
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Precon"),
+  dashboardHeader(title = "Precon DataSet"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Widgets", tabName = "widgets", icon = icon("th"))
+      menuItem("Home", tabName = "home", icon = icon("home")), 
+      menuItem("Precon Dashbaord", tabName = "dashboard", icon = icon("chart-area",class=("fas fa")) ), #<i class="fas fa-chart-area"></i>
+      menuItem("Clustering", tabName = "widgets", icon = icon("th")),
+      menuItem("About Us", tabName = "widgets", icon = icon("users", class=("fas fa")) ), #<i class="fas fa-users"></i>
+      menuItem("Contact Us", tabName = "widgets", icon = icon("address-card",class=("far fa"))) #<i class="far fa-address-card"></i>
     )
   ),
   
@@ -22,19 +25,28 @@ ui <- dashboardPage(
       
       tabItem(tabName = "dashboard",
               
-              box(
-                title = "Controls",
-                sliderInput("slider", "Number of observations:", min = 1, max = 1000, value = c(1,500) ),
-                
-                selectInput("variable", "Variable:",
-                            c("House 1" = "1",
-                              "House 2" = "2",
-                              "House 3" = "3")),
-                h4(textOutput("q")),
-              ),
+        #### Controls ####   
+        fluidRow(
+          
+          
+          box(
+            selectInput("variable", label = h4(textOutput("q")),
+                        c("House 1" = "1",
+                          "House 2" = "2",
+                          "House 3" = "3")),
+            ),
+          
+          box(
+            title = "Control Observations",
+            sliderInput("slider",label=NULL, min = 1, max = 10000, value = c(1,500) ),
+            ),
               
+
               
+        ),
               
+        #### Controls End ####      
+            
               fluidRow(
                 
                 box(
@@ -57,12 +69,16 @@ ui <- dashboardPage(
                   tabPanel("Daily", "Daily electricty usage",withSpinner(plotlyOutput("boxplot_Daily"), type = 5))
                 )
               )
+              
       ), #closing dashbaord tab
       
       
+      tabItem(tabName = "widgets",h2("Widgets tab content")),
       
-      tabItem(tabName = "widgets",h2("Widgets tab content"))
+      
+      tabItem(tabName = "home",h2("Home tab content"))
       
     )
   )
 )
+
