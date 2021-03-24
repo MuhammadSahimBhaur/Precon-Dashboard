@@ -17,6 +17,35 @@ server <- function(input, output, session){
   
   output$q = renderText({ paste("House",input$variable,"is selected!") })
   
+  output$w = renderUI({ HTML("<p>The PRECON data set contains electricity
+consumption patterns of 42 households over a
+time period of one year. The data of the whole
+house is recorded including the consumption of
+high-powered devices and major areas of the
+house. The aim of collecting this data is to
+deeply. understand the residential electricity
+consumption profiles of households in
+developing countries where the energy market is
+flourishing.</p> 
+<p>This dataset presents electricity consumption
+data of 42 households, recorded at a minute
+interval. For each day, data is stored in an
+individual CSV file for each household. Each
+file contains 1440 rows corresponding to each
+minute of the day and a varying number of
+columns. The number of columns varies because
+for each different household a different number
+of appliances are selected for monitoring. Other
+than electricity consumption data, several
+attributes related to the households are also
+recorded.</p> 
+<p>PRECON dataset is the first attempt to collect
+extensive residential energy consumption
+information from South Asia in particular
+Pakistan, and hence can be used in
+understanding important facts about the energy
+market.</p>") })
+  
   observe({
     start = input$slider[1]
     end = input$slider[2]

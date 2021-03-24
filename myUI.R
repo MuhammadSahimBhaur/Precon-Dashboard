@@ -76,7 +76,11 @@ ui <- dashboardPage(
       tabItem(tabName = "widgets",h2("Widgets tab content")),
       
       
-      tabItem(tabName = "home",h2("Home tab content"))
+      tabItem(tabName = "home",(
+        box(
+        htmlOutput("w"))
+          )
+                                  )
       
     )
   )
