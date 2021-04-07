@@ -68,6 +68,8 @@ market.</p>") })
     fig
   })
   
+  
+  
   output$bubbleplot = renderPlotly({
     
     data = r$dataframe
@@ -115,17 +117,58 @@ market.</p>") })
   output$piechart = renderPlotly({
     
     data = r$dataframe
-
+    data$Date_Time = as.Date(data$Date_Time)
+    month_data = data %>%
+      mutate(month = format(Date_Time, "%m")) %>%
+      group_by(month)
+    # print(unique(month_data['month']))
     
+    data = data %>%
+      mutate(percentage_use = (Usage_kW/sum(data$Usage_kW)) * 100 ) %>%
+      mutate(months = format(Date_Time, "%m")) %>%
+      mutate(MonthName = month.name[as.integer(format(Date_Time, "%m"))])
+    # str(data)
     
-    fig = plot_ly(data, type = 'pie')
-    fig = fig %>% layout(title = 'Electricity Usage',
-                         xaxis = list(showgrid = FALSE),
-                         yaxis = list(showgrid = FALSE))
+    ggplot(data, aes(x="", y=percentage_use, fill =MonthName ))+
+      geom_bar(stat="identity", width = 1)+
+      cord_plot("y")
+   
     
-    fig
- 
+  })
+  
+  output$barchart = renderPlotly({
+    data = r$dataframe
+    data$Date_Time = as.Date(data$Date_Time)
+    month_data = data %>%
+      mutate(month = format(Date_Time, "%m")) %>%
+      group_by(month)
+    # print(unique(month_data['month']))
     
+    data = data %>%
+      mutate(percentage_use = (Usage_kW/sum(data$Usage_kW)) * 100 ) %>%
+      mutate(total = sum(data$Usage_kW) ) %>%
+      mutate(months = format(Date_Time, "%m")) %>%
+      mutate(MonthName = month.name[as.integer(format(Date_Time, "%m"))])
+    # str(data)
+     p <- ggplot(data, aes(x=MonthName, y=total ))+
+        geom_bar(stat="identity", fill ="steelblue")+
+        theme_minimal()
+     
+     p
+  }
+    
+  )
+  
+  output$location = renderPlotly({
+    data <- data.frame(latitude=c(37.78,24.77,21.56,24.77,21.56,21.56,21.47,21.48,26.39,24.77),
+                       longitude=c(-100,46.74,39.19,46.74,39.2,39.2,39.23,39.19,49.98,46.74),
+                       )
+    
+    pal <- colorFactor(
+      palette = 'Blues')
+    
+    leaflet(data) %>% addTiles() %>%
+      addCircleMarkers(lat = ~latitude, lng = ~longitude,)
   })
   
   

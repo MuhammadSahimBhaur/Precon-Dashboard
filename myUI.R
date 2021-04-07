@@ -47,27 +47,37 @@ ui <- dashboardPage(
               
         #### Controls End ####      
             
-              fluidRow(
-                
-                box(
-                  title = h1("Energy Consumption"),
-                  width = 12,
-                  withSpinner(plotlyOutput("trend"), type = 5)
-                ),
-                
-                # box(
-                #   title = h1("Statistics Energy Consumption"),
-                #   plotlyOutput("boxplot"), width = 12
-                # ),
-                # box(plotlyOutput("boxplot"))
-                # plotlyOutput("piechart")
-                
-                tabBox(
-                  title = "Electricty Usage Statistics",
-                  id = "tabset1", width = 12,
-                  tabPanel("Hourly", "12 Hour Electricity Usage",withSpinner(plotlyOutput("boxplot_hourly"), type = 5)),
-                  tabPanel("Daily", "Daily electricty usage",withSpinner(plotlyOutput("boxplot_Daily"), type = 5))
-                )
+        fluidRow(
+          
+          box(
+            title = h1("Energy Consumption"),
+            width = 12,
+            withSpinner(plotlyOutput("trend"), type = 5)
+          ),
+          
+          # box(
+          #   title = h1("Statistics Energy Consumption"),
+          #   plotlyOutput("boxplot"), width = 12
+          # ),
+          # box(plotlyOutput("boxplot"))
+          # plotlyOutput("piechart")
+          
+          tabBox(
+            title = "Electricty Usage Statistics",
+            id = "tabset1", width = 12,
+            tabPanel("Hourly", "12 Hour Electricity Usage",withSpinner(plotlyOutput("boxplot_hourly"), type = 5)),
+            tabPanel("Daily", "Daily electricty usage",withSpinner(plotlyOutput("boxplot_Daily"), type = 5))
+          ),
+          box(
+            title = h1("Monthly Energy Consumption"),
+            width = 12,
+            withSpinner(plotlyOutput("barchart"), type = 5)
+          ),
+          # box(
+          #   title = h1("Locations"),
+          #   width = 12,
+          #   withSpinner(plotlyOutput("location"), type = 5)
+          # ),
               )
               
       ), #closing dashbaord tab
