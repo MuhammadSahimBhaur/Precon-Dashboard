@@ -21,6 +21,21 @@ ui <- dashboardPage(
   
   dashboardBody(
     
+    tags$style(
+      HTML('
+         #center {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         }
+
+         #fluidrow1 {
+        height:50px;
+         }
+
+         ')
+    ),
+    
     tabItems(
       
       tabItem(tabName = "dashboard",
@@ -30,11 +45,23 @@ ui <- dashboardPage(
           
           
           box(
-            selectInput("variable", label = h4(textOutput("q")),
+            selectInput("variable", label = h4("Select a house"),
                         c("House 1" = "1",
                           "House 2" = "2",
                           "House 3" = "3")),
-            ),
+            # ),
+
+          # box(
+            selectInput("gran", label = h4("Granularity"),
+                        c("Minutes" = "mins",
+                          "Hours" = "hrs",
+                          "Days" = "days",
+                        "Months" = "mon")),
+          ),
+          
+          # ),
+        
+
           
           box(
             title = "Control Observations",
@@ -88,6 +115,8 @@ ui <- dashboardPage(
       
       tabItem(tabName = "home",(
         box(
+        htmlOutput("picture1"),
+        htmlOutput("picture2"),
         htmlOutput("w"))
           )
                                   )
