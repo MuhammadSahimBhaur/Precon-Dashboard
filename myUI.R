@@ -7,40 +7,64 @@ library(shinycssloaders)
 
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=1)
 
+
 ui <- dashboardPage(
+  
   dashboardHeader(title = "Precon DataSet"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Home", tabName = "home", icon = icon("home")), 
       menuItem("Precon Dashbaord", tabName = "dashboard", icon = icon("chart-area",class=("fas fa")) ), #<i class="fas fa-chart-area"></i>
-      menuItem("Clustering", tabName = "widgets", icon = icon("th")),
-      menuItem("About Us", tabName = "widgets", icon = icon("users", class=("fas fa")) ), #<i class="fas fa-users"></i>
-      menuItem("Contact Us", tabName = "widgets", icon = icon("address-card",class=("far fa"))) #<i class="far fa-address-card"></i>
+      menuItem("Clustering", tabName = "cluster", icon = icon("th")),
+      menuItem("About Us", tabName = "aboutus", icon = icon("users", class=("fas fa")) ), #<i class="fas fa-users"></i>
+      menuItem("Contact Us", tabName = "contactus", icon = icon("address-card",class=("far fa"))) #<i class="far fa-address-card"></i>
     )
   ),
   
   dashboardBody(
     
-    tags$style(
-      HTML('
-         #center {
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         }
-
-         #fluidrow1 {
-        height:50px;
-         }
-
-         ')
-    ),
+    # tags$style(
+    #   HTML('
+    #      #center {
+    #      display: flex;
+    #      align-items: center;
+    #      justify-content: center;
+    #      }
+    # 
+    #      #fluidrow1 {
+    #     height:50px;
+    #      }
+    # 
+    #      ')
+    # ),
     
     tabItems(
       
+      tabItem(tabName = "home",(
+        fluidPage(
+          fluidRow(
+            column(width=12,offset = 3,
+                   box(
+                     htmlOutput("picture1")
+                   )
+            )),
+
+          fluidRow(
+            column(width=12,offset = 3,
+                   box(
+                     htmlOutput("w"))
+            )
+          )
+        )
+
+      )
+      ),
+      
+      
       tabItem(tabName = "dashboard",
               
-        #### Controls ####   
+        #### Controls #### 
+        column(width=8,
         fluidRow(
           
           
@@ -52,24 +76,37 @@ ui <- dashboardPage(
             # ),
 
           # box(
-            selectInput("gran", label = h4("Granularity"),
+            selectInput("gran", label = h4("Granularity"),selected="hrs",
                         c("Minutes" = "mins",
                           "Hours" = "hrs",
                           "Days" = "days",
                         "Months" = "mon")),
           ),
-          
           # ),
         
 
-          
+        
           box(
             title = "Control Observations",
-            sliderInput("slider",label=NULL, min = 1, max = 10000, value = c(1,500) ),
+            # sliderInput("slider",label=NULL, min = 1, max = 10000, value = c(1,500) ),
+            # dateInput("start_date", label = ("Start Date input"), value = "2018-01-01"),
+            # dateInput("end_date", label = ("End Date input"), value = "2020-01-01")
+            
+            dateRangeInput('dateRange',
+                           label = NULL,
+                           start = as.POSIXct("2018-07-02"), end = as.POSIXct("2018-12-10")
             ),
+            
+            actionButton("run", "Run")
+            
+            ),
+          
+          
+         
               
 
               
+        ),
         ),
               
         #### Controls End ####      
@@ -110,18 +147,34 @@ ui <- dashboardPage(
       ), #closing dashbaord tab
       
       
-      tabItem(tabName = "widgets",h2("Widgets tab content")),
+      # tabItem(tabName = "widgets",h2("Widgets tab content"))
+      
+      tabItem(tabName = "cluster",(
+        fluidPage(
+          fluidRow(
+            # column(width=12,offset = 3,
+                   # box(
+                     htmlOutput("clustering_picture")
+                   # )
+            # )
+          ),
+
+          # fluidRow(
+          #   column(width=12,offset = 3,
+          #          box(
+          #            htmlOutput("w"))
+          #   )
+          # )
+        )
+        
+      )
+      )
       
       
-      tabItem(tabName = "home",(
-        box(
-        htmlOutput("picture1"),
-        htmlOutput("picture2"),
-        htmlOutput("w"))
-          )
+
                                   )
       
     )
   )
-)
+
 
