@@ -132,7 +132,7 @@ server <- function(input, output, session) {
   
   output$picture1 <-
     renderText({
-      c(' <img src="locale.png" , width = "100%", height = "100%" > <h2>Introduction<h2>')
+      c(' <img src="locale.jpg" , width = "100%", height = "100%" > <h2>Introduction<h2>')
       
     })
   
