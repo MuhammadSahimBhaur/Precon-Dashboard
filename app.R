@@ -5,6 +5,7 @@ library(ggplot2)
 library(shinycssloaders)
 library(rsconnect)
 library(leaflet)
+library(xts)
 
 # options(  spinner.color = "#0275D8",spinner.color.background = "#ffffff",  spinner.size = 0.5)
 
@@ -269,7 +270,9 @@ which was set to their respective mean values.
       
       </h2>
       
-      <p> Due to the small size of the PRECON dataset it becomes difficult to apply the distrubtive algorithm and observe significant changes in time taken to compute the clustering.</p>
+      <p> Due to the small size of the PRECON dataset it becomes difficult to apply the distrubtive algorithm and observe significant changes in time taken to compute the clustering.
+     In the future we would like to implement the Distributive CFSFDP algorithm on a larger Dataset that is from the developing regions of the world. 
+      </p>
       "
     )
   })
@@ -404,8 +407,7 @@ which was set to their respective mean values.
       
       data$Date_Time = as.Date(data$Date_Time)
       
-      ggplot(data, aes(x = Date_Time, y = Usage_kW, group= 1)) + geom_boxplot() +
-        labs(x = "Date", y = "Daily Electrcity consumption (kW)")
+      ggplot(data, aes(x = Date_Time, y = Usage_kW, group= 1)) + geom_boxplot() + labs(x = "Date", y = "Daily Electrcity consumption (kW)")
     
     })
     
@@ -416,7 +418,9 @@ which was set to their respective mean values.
     latitude=c(31.582045,31.470435)
     longitude=c(74.329376,74.409170)
     
-    geocode <- data.frame(latitude,longitude)
+    # geocode <- data.frame(latitude,longitude)
+    
+    geocode <- read.csv(file = "longlat.csv", sep = ",")[,3:4]
     
     
     
@@ -424,7 +428,7 @@ which was set to their respective mean values.
     m <- leaflet(option=leafletOptions(maxZoom = 15)) %>%
       addTiles() %>%  # Add default OpenStreetMap map tiles
       
-      addCircles(lng= geocode$longitude, lat=geocode$latitude,
+      addCircles(lng= geocode$Lng, lat=geocode$Lat,
         radius = 250,
         stroke = FALSE, fillOpacity = 0.5
       )
