@@ -4,6 +4,7 @@ library(plotly)
 library(ggplot2)
 library(shinycssloaders)
 library(rsconnect)
+library(leaflet)
 
 # options(  spinner.color = "#0275D8",spinner.color.background = "#ffffff",  spinner.size = 0.5)
 
@@ -26,32 +27,15 @@ ui <- dashboardPage(
         "About Us",
         tabName = "aboutus",
         icon = icon("users", class = ("fas fa"))
-      ),
-      menuItem(
-        "Contact Us",
-        tabName = "contactus",
-        icon = icon("address-card", class = ("far fa"))
       )
     )
   ),
   
   dashboardBody(tabItems(
-    # tabItem(tabName = "home", (fluidPage(
-    #   fluidRow(column(
-    #     width = 12, offset = 3,
-    #     box(htmlOutput("picture1"))
-    #   )),
-    #   
-    #   fluidRow(column(
-    #     width = 12, offset = 3,
-    #     box(htmlOutput("w"))
-    #   ))
-    # ))),
-    
-    
+
     tabItem(tabName = "home", (fluidPage(
       fluidRow(column(
-        width = 12, offset = 2, box(width= 8,height = 720,htmlOutput("picture1"),
+        width = 12, offset = 2, box(width= 8,height = 920,htmlOutput("picture1"),
       # fluidRow(column(
       #   width = 12, offset = 3,
         htmlOutput("w")
@@ -90,8 +74,8 @@ ui <- dashboardPage(
                 dateRangeInput(
                   'dateRange',
                   label = "Date Range",
-                  start = as.POSIXct("2018-07-02"),
-                  end = as.POSIXct("2018-12-10")
+                  start = as.POSIXct("2018-07-16"),
+                  end = as.POSIXct("2018-09-20")
                 ),
                 
                 actionButton("run", "Run")
@@ -104,8 +88,19 @@ ui <- dashboardPage(
                 width = 8,
                 plotlyOutput("trend")
               )
-            ),),
-    
+            ),
+            
+            fluidRow(
+              box(title = "Daily Consumption Boxplot",width = 12,withSpinner( plotlyOutput("boxplot_daily") )
+            ),
+            ),
+            fluidRow(
+              box(width = 12,title = "Map Locations",leafletOutput("location")
+              )
+            )
+            
+            ),
+    # ),
     
     tabItem(tabName = "cluster", (fluidPage(fluidRow(
       column(
@@ -113,9 +108,22 @@ ui <- dashboardPage(
         offset = 2,
         box(
           width = 8,
-          height = 750,
+          height = 1100,
           htmlOutput("clustering_picture"),
           htmlOutput("e")
+        )
+      )
+    )))),
+    
+    tabItem(tabName = "aboutus", (fluidPage(fluidRow(
+      column(
+        width = 12,
+        offset = 2,
+        box(
+          width = 8,
+          height = 750,
+          # htmlOutput(""),
+          htmlOutput("r")
         )
       )
     ))))
@@ -127,18 +135,21 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
   r <- reactiveValues(dataframetemp = NULL,
+                      dataframe_daterange = NULL,
                       dataframe = NULL,
                       doPlot = FALSE)
   
   output$picture1 <-
     renderText({
-      c(' <img src="locale.jpg" , width = "100%", height = "100%" > <h2>Introduction<h2>')
+      c(' <img src="locale.jpg" , width = "100%", height = "100%" > ')
       
     })
   
   output$w = renderUI({
     HTML(
-      "<p>The PRECON data set contains electricity
+      "
+      <h2>Introduction to Precon</h2>
+      <p>The PRECON data set contains electricity
                 consumption patterns of 42 households over a
                 time period of one year. The data of the whole
                 house is recorded including the consumption of
@@ -165,7 +176,13 @@ server <- function(input, output, session) {
                 information from South Asia in particular
                 Pakistan, and hence can be used in
                 understanding important facts about the energy
-                market.</p>"
+                market.</p>
+            <h2> Precon Dashboard </h2>
+            <p> This dashboard intends to help present the precon data 
+            more clearly by making it easily available and accessible in an interactive manner. </p>
+      
+      "
+
     )
   })
   
@@ -220,11 +237,79 @@ minimum distance is the cluster center. The total
 time taken for running the clustering algorithm
 on the whole data was 13.31368637084961
 seconds.</p>
+
+<h2> Distributive Approach </h2>
+<p> the distributive algorithm
+was applied on the data set at hand. In order to
+apply the distributive approach, the data set was
+clustered using 15-means and the violating
+clusters were found. The threshold set for
+violating cluster was 10% of the minimum
+squared distance of any point to its cluster. 2-
+means was applied to the violating clusters and
+
+the total clusters were updated accordingly. As a
+result, a total of 30 clusters were formed with
+the cluster centers representation all the other
+points. Using the cluster centers, CFSFPD
+clustering was performed and the corresponding
+plots were generated. </p>
+
+<p> The final results generated matched the results
+produced by merely applying CFSFDP on the
+whole data set. The number of clusters created
+by the CFSFDP were 24 and the total time taken
+was 11.537638664245605 seconds. The number
+of clusters can be controlled by changing the
+threshold of local density and minimum distance
+which was set to their respective mean values.
+</p>
+      <h2>
+      Limitations and Future Work
+      
+      </h2>
+      
+      <p> Due to the small size of the PRECON dataset it becomes difficult to apply the distrubtive algorithm and observe significant changes in time taken to compute the clustering.</p>
+      "
+    )
+  })
+  
+  output$r = renderUI({
+    HTML(
+      "
+      <h2> Electricity Informatics Group @ LUMS</h2>
       
       <p>
-      
-      
+      The Energy Informatics Group (EIG) carries out interdisciplinary research in
+						the area of renewable energy analytics, smart grids, and energy efficiency.
+					</p>	
+				<p>		The broader goal of EIG is to help Pakistan use 100% renewable sources for
+						generating electricity by 2050. To this end, the group carries out research in
+						short, medium and long term forecasting of energy demand, renewable energy
+						generation forecasting for wind and solar resources, demand side management
+						in agricultural, residential and industrial sectors, energy efficiency and
+						renewable energy integration in already built environments, improving energy
+						distribution through soft load shedding, detecting non-technical losses in
+						energy distribution systems and other related topics. EIG also works with the
+						governmental agencies to develop evidence-based policy recommendations for
+						long term renewable energy plan for Pakistan.
       </p>
+      
+      <h2>
+      Precon Dataset
+      </h2>
+      
+      <p>
+      PRECON is a first of its kind extensive dataset of electricity consumption patterns of users in developing countries. The dataset has been collected through smart meters over a period of one year and comprise of data of users belonging to different demographics and different social and financial backgrounds. It provides details of electricity consumption data and meta-data of houses opted for data collection. Also, we have provided details on high electricity consumption devices and the load profile of the whole house. The aim of this data collection and processing exercise is to understand the electricity consumption patterns of users in the developing world. A sound realization of consumption patterns can help in the development of intelligent smart grids and better demand-side management tools.</p>
+
+<p> PRECON is unique from the datasets of its kind because it is only extensive dataset collected over a period of one year which is publically available. Other than that it is different in terms that it monitors a greater number of households than any other similar dataset of developing countries.
+      </p>
+      
+      <h2>
+      Contact Us:
+      </h2>
+      Muhammad Sahim Bhaur: <a href=\"m.sahimbhaur@gmail.com\">m.sahimbhaur@gmail.com</a><br>
+      Taha Razzaq: <a href=\"taharazzaq091@gmail.com\">taharazzaq091@gmail.com</a>
       "
     )
   })
@@ -255,6 +340,7 @@ seconds.</p>
       dataframe$Date_Time = as.POSIXct(dataframe$Date_Time)
       dataframe = dataframe[dataframe$Date_Time >= as.POSIXct(format(input$dateRange[1])) &
                               dataframe$Date_Time <= as.POSIXct(format(input$dateRange[2])), ]
+      r$dataframe_daterange = dataframe
       df_xts = xts(dataframe, order.by = dataframe$Date_Time)
       df_xts$Date_Time = NULL
       
@@ -306,6 +392,44 @@ seconds.</p>
       fig
       
     })
+  })
+  
+  output$boxplot_daily = renderPlotly({
+    if (r$doPlot == FALSE) return()
+    
+    isolate({
+      
+      data = r$dataframe_daterange
+      # print(head(data))
+      
+      data$Date_Time = as.Date(data$Date_Time)
+      
+      ggplot(data, aes(x = Date_Time, y = Usage_kW, group= 1)) + geom_boxplot() +
+        labs(x = "Date", y = "Daily Electrcity consumption (kW)")
+    
+    })
+    
+  })
+  
+  output$location = renderLeaflet({
+     
+    latitude=c(31.582045,31.470435)
+    longitude=c(74.329376,74.409170)
+    
+    geocode <- data.frame(latitude,longitude)
+    
+    
+    
+    
+    m <- leaflet(option=leafletOptions(maxZoom = 15)) %>%
+      addTiles() %>%  # Add default OpenStreetMap map tiles
+      
+      addCircles(lng= geocode$longitude, lat=geocode$latitude,
+        radius = 250,
+        stroke = FALSE, fillOpacity = 0.5
+      )
+    m
+    
   })
   
 }
