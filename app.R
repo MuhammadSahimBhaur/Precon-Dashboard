@@ -407,7 +407,11 @@ which was set to their respective mean values.
       
       data$Date_Time = as.Date(data$Date_Time)
       
-      ggplot(data, aes(x = Date_Time, y = Usage_kW, group= 1)) + geom_boxplot() + labs(x = "Date", y = "Daily Electrcity consumption (kW)")
+      fig = plot_ly(data,x =data$Date_Time,  y = data$Usage_kW, type = "box")
+      
+      fig
+      
+      # ggplot(data, aes(x = Date_Time, y = Usage_kW, group= 1)) + geom_boxplot() + labs(x = "Date", y = "Daily Electrcity consumption (kW)")
     
     })
     
