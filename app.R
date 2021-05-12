@@ -7,38 +7,38 @@ library(rsconnect)
 library(leaflet)
 library(xts)
 
-# options(  spinner.color = "#0275D8",spinner.color.background = "#ffffff",  spinner.size = 0.5)
+# options(  spinner.color = "#0275D8",spinner.color.background = "#ffffff",  spinner.size = 0.5) # changes the spinner
+
+# This application is built for  easy manipulation of the time series Precon data set.
+# The dashboard has one input box for selecting parameters and then has three output boxes that
+# present the information in the suitable format.
+# UI
+# The first part of the dashboard is the UI which calls to different server functions.
+# Server
+# The server not only processes the data but also serves the information like images and large paragraphs of texts.
 
 
 ui <- dashboardPage(
   
 
-  skin = "black",
+  skin = "black", # change the default theme to black and white
   dashboardHeader(title = "Precon DataSet"),
   dashboardSidebar(
-    sidebarMenu(
+    sidebarMenu( #list of tabs
       menuItem("Home", tabName = "home", icon = icon("home")),
-      menuItem(
-        "Precon Dashbaord",
-        tabName = "dashboard",
-        icon = icon("chart-area", class = ("fas fa"))
-      ),
+      menuItem("Precon Dashbaord",tabName = "dashboard",icon = icon("chart-area", class = ("fas fa")) ),
       menuItem("Clustering", tabName = "cluster", icon = icon("th")),
-      menuItem(
-        "About Us",
-        tabName = "aboutus",
-        icon = icon("users", class = ("fas fa"))
+      menuItem("About Us",tabName = "aboutus",icon = icon("users", class = ("fas fa"))
       )
     )
   ),
   
   dashboardBody(tabItems(
 
+      #Loading a box then outputting and picture and text from the server side. 
     tabItem(tabName = "home", (fluidPage(
       fluidRow(column(
         width = 12, offset = 2, box(width= 8,height = 920,htmlOutput("picture1"),
-      # fluidRow(column(
-      #   width = 12, offset = 3,
         htmlOutput("w")
       ))),
       ))
@@ -55,10 +55,34 @@ ui <- dashboardPage(
                 selectInput(
                   "variable",
                   label = "Select a house",
-                  c(
+                  c( 
                     "House 1" = "1",
                     "House 2" = "2",
-                    "House 3" = "3"
+                    "House 3" = "3",
+                    "House 4" = "4",
+                    "House 5" = "5",
+                    "House 6" = "6",
+                    "House 7" = "7",
+                    "House 8" = "8",
+                    "House 9" = "9",
+                    "House 10" = "10",
+                    "House 11" = "11",
+                    "House 12" = "12",
+                    "House 13" = "13",
+                    "House 14" = "14",
+                    "House 15" = "15",
+                    "House 16" = "16",
+                    "House 17" = "17",
+                    "House 18" = "18",
+                    "House 19" = "19",
+                    "House 20" = "20",
+                    "House 21" = "21",
+                    "House 22" = "22",
+                    "House 23" = "20","House 24" = "3","House 25" = "25","House 26" = "26","House 27" = "28","House 29" = "29",
+                    "House 30" = "30","House 31" = "31","House 32" = "32","House 33" = "33","House 34" = "34","House 35" = "35",
+                    "House 36" = "36","House 37" = "38","House 38" = "38","House 39" = "39","House 40" = "40","House 41" = "41",
+                    "House 42" = "42"
+                    
                   )
                 ),
                 selectInput(
@@ -96,7 +120,7 @@ ui <- dashboardPage(
             ),
             ),
             fluidRow(
-              box(width = 12,title = "Map Locations",leafletOutput("location")
+              box(width = 12,title = "Map Locations",withSpinner(leafletOutput("location"))
               )
             )
             
@@ -411,7 +435,7 @@ which was set to their respective mean values.
       
       fig
       
-      # ggplot(data, aes(x = Date_Time, y = Usage_kW, group= 1)) + geom_boxplot() + labs(x = "Date", y = "Daily Electrcity consumption (kW)")
+   
     
     })
     
@@ -419,24 +443,18 @@ which was set to their respective mean values.
   
   output$location = renderLeaflet({
      
-    latitude=c(31.582045,31.470435)
-    longitude=c(74.329376,74.409170)
     
-    # geocode <- data.frame(latitude,longitude)
-    
-    geocode <- read.csv(file = "longlat.csv", sep = ",")[,3:4]
+    geocode <- read.csv(file = "longlat.csv", sep = ",")[,2:4]
+    housename = paste("House " , input$variable , sep = "")
     
     
-    
-    
-    m <- leaflet(option=leafletOptions(maxZoom = 15)) %>%
-      addTiles() %>%  # Add default OpenStreetMap map tiles
-      
-      addCircles(lng= geocode$Lng, lat=geocode$Lat,
-        radius = 250,
+    m <- leaflet(geocode,option=leafletOptions(maxZoom = 13)) %>% addTiles() %>%
+      addCircleMarkers(
+        radius = 15,
+        label = geocode$house_no,
+        color = ~ifelse(geocode$house_no == housename, "navy", "red"),
         stroke = FALSE, fillOpacity = 0.5
       )
-    m
     
   })
   
